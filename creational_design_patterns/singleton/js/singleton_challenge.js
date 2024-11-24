@@ -41,7 +41,11 @@ class ShoppingCar {
     }
 
     deleteById(id) {
-        this.#products = this.#products.map((product) => product.id != id);
+        this.#products = this.#products.filter(product => product.id != id);
+    }
+
+    cancelShoppingCar() {
+        this.#products = [];
     }
 
     get shoppingCar() {
@@ -61,11 +65,20 @@ function testShoppingCar() {
     const shoppingCar = ShoppingCar.createShoppingCar();
     shoppingCar.addProduct(product1);
     shoppingCar.addProduct(product2);
-
+    shoppingCar.addProduct(product3);
     console.log(shoppingCar.products);
-    shoppingCar.deleteById('2');
-    console.log(shoppingCar.products);
+    
+    const shoppingCar2 = ShoppingCar.createShoppingCar();
+    const product50 = new Product('50','trapeador',25500);
+    const product51 = new Product('51','escoba',25000);
+    const product52 = new Product('52','recojedor',15000);
+    shoppingCar2.addProduct(product50);
+    shoppingCar2.addProduct(product51);
+    shoppingCar2.addProduct(product52);
+    console.log(shoppingCar2.products);
 
+    shoppingCar2.cancelShoppingCar();
+    console.log(shoppingCar2.products);
 }
 
 testShoppingCar();
