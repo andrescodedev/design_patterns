@@ -26,6 +26,21 @@
         3. Creamos la interfaz factory que definirá el comportamiento de las clases factory.
         4. Creamos las clases factory, que se encargan de la creación de los objetos de las clases implementadoras
            de la interfaz base, a través de un metodo de fabricación.
+
+    Pros
+        - Evitamos un alto acoplamiento entre las clases factory y las clases (fabricadas) cuyos objetos 
+          son fabricados por dichas clases factory.
+        - La creación de objetos de las clases fabricadas suceden en un único punto.
+        - Agregar nuevas clases fabricadas no requiere modificar el código existente.
+
+    Contra
+        - Demsadiado código genérico.
+        - Muchas abstracciones.
+
+    Cuándo usarlo?
+        1. Cuando no sabes cuántas clases fabricadas diferentes habrá o puede llegar a haber.
+        2. Cuando necesites desacoplar el uso de las clases fabricadas con su creación.
+        3. Extender el funcionamiento de frameworks o  librerías.
 */
 
 class InterfaceCar {
