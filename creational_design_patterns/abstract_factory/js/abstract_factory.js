@@ -16,6 +16,21 @@
            por cada uno de los productos en el catálogo.
         4. Crear clases factory concretas por cada una de las familias de versiones que implementen los
            métodos de creación.
+
+    PROS
+        - Evitamos un acoplamiento alto entre los elementos creadores y los productos.}
+        - Los productos retornados por las fábricas son intercambiables.
+        - La creación de los productos sucede en un único punto.
+        - Agregar nuevos productos no requiere modificar el código existente, lo extiende.
+
+    CONTRA
+        - Demasiado código genérico, nueva versión, nuevos productos, nuevo método de creación.
+        - Si los productos base agregan algún elemento, todos los productos concretos deben de implementar el cambio.
+        - Depende de que exista familia de productos.
+
+    Cuando usarlo?
+        - Úsalo cuando tengas variantes de los productos base, que compartan similitudes y puedan ser agrupados.
+        - Cuando necesitamos que los productos nuevos se integren con los existentes.
 */
 
 //STEP 1 - INTERFACES
