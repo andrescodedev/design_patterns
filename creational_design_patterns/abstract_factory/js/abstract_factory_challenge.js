@@ -17,55 +17,98 @@
         - WINDOWS (laptop, tablet )
 */
 
-//ENTITIES - INTERFACES
+
+//UTILS
+class ConstProfitPercentage {
+    static laptopProfitPercentage = 0.6; // 60%
+    static phoneProfitPercentage = 0.4; //40%
+    static tabletProfitPercentage = 0.3; //30%
+}
+
+//ENTITIES INTERFACES
 class CPUInterface {
-    getCpuPrice(){throw new Error(`This method can't be implemented`)}
+    getCPUPrice() { throw new Error(`This method can't be implemented`) }
+    getCPUSerie() { throw new Error(`This method can't be implemented`) }
+    getCPUApplication() { throw new Error(`This method can't be implemented`) }
+    getCPUBrand() { throw new Error(`This method can't be implemented`) }
 }
 
 class MemoryInterface {
-    getMemoryPrice() {throw new Error(`This method can't be implemented`)}
+    getMemoryPrice() { throw new Error(`This method can't be implemented`) }
+    getMemoryCapacityInGb() { throw new Error(`This method can't be implemented`) }
+    getMemoryApplication() { throw new Error(`This method can't be implemented`) }
+    getMemoryBrand() { throw new Error(`This method can't be implemented`) }
 }
 
 class DisplayInterface {
-    getDisplayPrice() {throw new Error(`This method can't be implemented`)}
+    getDisplayPrice() { throw new Error(`This method can't be implemented`) }
+    getDisplayInches() { throw new Error(`This method can't be implemented`) }
+    getDisplayApplication() { throw new Error(`This method can't be implemented`) }
+    getDisplayBrand() { throw new Error(`This method can't be implemented`) }
 }
 
 class OperativeSystemInterface {
-    getLicensePrice() {throw new Error(`This method can't be implemented`)}
+    getOperativeSystemLicensePrice() { throw new Error(`This method can't be implemented`) }
+    getOperativeSystemVersion() { throw new Error(`This method can't be implemented`) }
+    getOperativeSystemApplication() { throw new Error(`This method can't be implemented`) }
+    getOperativeSystemBrand() { throw new Error(`This method can't be implemented`) }
 }
 
-class DeviceInterface {
-    calculateTotalPrice() {throw new Error(`This method can't be implemented`)}
+class AssembledLaptopInterface {
+    getAssembledLaptopBrand() { throw new Error(`This method can't be implemented`) }
+    getAssembledLaptopCPU() { throw new Error(`This method can't be implemented`) }
+    getAssembledLaptopMemory() { throw new Error(`This method can't be implemented`) }
+    getAssembledLaptopDisplay() { throw new Error(`This method can't be implemented`) }
+    getAssembledLaptopOperativeSystem() { throw new Error(`This method can't be implemented`) }
+    getAssembledLaptopBasePrice() { throw new Error(`This method can't be implemented`) }
+    getAssembledLaptopSalePrice() { throw new Error(`This method can't be implemented`) }
 }
 
 //ENTITIES - IMPLEMENTERS CLASSES
-class CPULaptop extends CPUInterface {
-    constructor(numberCores, brand, price) {
-        this.numberCores = numberCores;
+class IntelCPU extends CPUInterface {
+
+    constructor(serie, brand, application, price) {
+        this.serie = serie;
         this.brand = brand;
+        this.application = application;
         this.price = price;
     }
 
-    getCpuPrice() {
+    getCPUSerie() {
+        return this.serie;
+    }
+
+    getCPUBrand() {
+        return this.brand;
+    }
+
+    getCPUApplication() {
+        return this.application;
+    }
+
+    getCPUPrice() {
         return this.price;
     }
 }
 
-class CPUMobile extends CPUInterface {
-    constructor(numberCores, brand, price) {
-        this.numberCores = numberCores;
+class SODimmMemory extends MemoryInterface {
+    constructor(brand, capacityInGB, application, price) {
         this.brand = brand;
-        this.price = price;
-    }
-    getCpuPrice() {
-        return this.price;
-    }
-}
-
-class MemoryLaptop extends MemoryInterface {
-    constructor(capacityInGB, price) {
         this.capacityInGB = capacityInGB;
+        this.application = application;
         this.price = price;
+    }
+
+    getMemoryBrand() {
+        return this.brand;
+    }
+
+    getMemoryCapacityInGb() {
+        return this.capacityInGB;
+    }
+
+    getMemoryApplication() {
+        return this.application;
     }
 
     getMemoryPrice() {
@@ -73,21 +116,24 @@ class MemoryLaptop extends MemoryInterface {
     }
 }
 
-class MemoryMobile extends MemoryInterface {
-    constructor(capacityInGB, price) {
-        this.capacityInGB = capacityInGB;
+class LCDDisplay extends DisplayInterface {
+    constructor(brand, inches, application, price) {
+        this.brand = brand;
+        this.inches = inches;
+        this.application = application;
         this.price = price;
     }
 
-    getMemoryPrice() {
-        return this.price;
+    getDisplayBrand() {
+        return this.brand;
     }
-}
 
-class DisplayLaptop extends DisplayInterface {
-    constructor(numberInches, price) {
-        this.numberInches = numberInches;
-        this.price = price;
+    getDisplayInches() {
+        return this.inches;
+    }
+
+    getDisplayApplication() {
+        return this.application;
     }
 
     getDisplayPrice() {
@@ -95,189 +141,110 @@ class DisplayLaptop extends DisplayInterface {
     }
 }
 
-class DisplayPhone extends DisplayInterface {
-    constructor(numberInches, price) {
-        this.numberInches = numberInches;
-        this.price = price;
-    }
-
-    getDisplayPrice() {
-        return this.price;
-    }
-}
-
-class DisplayTablet extends DisplayInterface {
-    constructor(numberInches, price) {
-        this.numberInches = numberInches;
-        this.price = price;
-    }
-
-    getDisplayPrice() {
-        return this.price;
-    }
-}
-
-class OperativeSystemLaptop extends OperativeSystemInterface {
-    constructor(operativeSystem) {
-        this.operativeSystem = operativeSystem;
-    }
-    
-    getLicensePrice() {
-        return this.operativeSystem.licensePrice;
-    }
-}
-
-class OperativeSystemMobile extends OperativeSystemInterface {
-    constructor(operativeSystem) {
-        this.operativeSystem = operativeSystem;
-    }
-    
-    getLicensePrice() {
-        return this.operativeSystem.licensePrice;
-    }
-}
-
-class WindowsOS {
-    constructor(version, licensePrice) {
+class WindowsOperativeSystem extends OperativeSystemInterface {
+    constructor(brand, version, application, price) {
+        this.brand = brand;
         this.version = version;
-        this.licensePrice = licensePrice;
+        this.application = application;
+        this.price = price;
     }
 
-    getLicensePrice() {
-        return this.getLicensePrice;
+    getOperativeSystemBrand() {
+        return this.brand;
     }
 
-}
-
-class AndroidOS {
-    constructor(version) {
-        this.version = version;
-        this.licensePrice = 0;
+    getOperativeSystemVersion() {
+        return this.version;
     }
 
-    getLicensePrice() {
-        return this.licensePrice;
-    }
-}
-
-class Laptop extends DeviceInterface {
-    constructor(cpuPrice, memoryPrice, displayPrice, operativeSystemPrice) {
-        this.cpuPrice = cpuPrice;
-        this.memoryPrice = memoryPrice;
-        this.displayPrice = displayPrice;
-        this.operativeSystemPrice = operativeSystemPrice;
-        this.price = calculateTotalPrice();
+    getOperativeSystemApplication() {
+        return this.application;
     }
 
-    calculateTotalPrice() {
-        return this.cpuPrice+this.memoryPrice+this.displayPrice+this.operativeSystemPrice;
-    }
-
-}
-
-class Phone extends DeviceInterface {
-    constructor(cpuPrice, memoryPrice, displayPrice, operativeSystemPrice) {
-        this.cpuPrice = cpuPrice;
-        this.memoryPrice = memoryPrice;
-        this.displayPrice = displayPrice;
-        this.operativeSystemPrice = operativeSystemPrice;
-        this.price = calculateTotalPrice();
-    }
-
-    calculateTotalPrice() {
-        return this.cpuPrice+this.memoryPrice+this.displayPrice+this.operativeSystemPrice;
+    getOperativeSystemLicensePrice() {
+        return this.price;
     }
 }
 
-class Tablet extends DeviceInterface {
-    constructor(cpuPrice, memoryPrice, displayPrice, operativeSystemPrice) {
-        this.cpuPrice = cpuPrice;
-        this.memoryPrice = memoryPrice;
-        this.displayPrice = displayPrice;
-        this.operativeSystemPrice = operativeSystemPrice;
-        this.price = calculateTotalPrice();
+class AsusLaptop extends AssembledLaptopInterface {
+    constructor(brand, cpu, memory, display, operativeSystem, basePrice) {
+        this.brand = brand;
+        this.cpu = cpu;
+        this.memory = memory;
+        this.display = display;
+        this.operativeSystem = operativeSystem;
+        this.basePrice = basePrice;
+        this.salePrice = this.getAssembledLaptopSalePrice(new PriceCalculateServiceFactory());
     }
 
-    calculateTotalPrice() {
-        return this.cpuPrice+this.memoryPrice+this.displayPrice+this.operativeSystemPrice;
-    }
-}
-
-// ABSTRACT FACTORIES
-class LaptopAbstractFactory {
-    createCPULaptopInstance() {throw new Error(`this methods can't be implemented`)}
-    createMemoryLaptopInstance() {throw new Error(`this methods can't be implemented`)}
-    createDisplayLaptopInstance() {throw new Error(`this methods can't be implemented`)}
-    createOperativeSystemLaptopInstance() {throw new Error(`this methods can't be implemented`)}
-}
-
-class PhoneAbstractFactory {
-    createCPUMobileInstance() {throw new Error(`this methods can't be implemented`)}
-    createMemoryMobileInstance() {throw new Error(`this methods can't be implemented`)}
-    createDisplayPhoneInstance() {throw new Error(`this methods can't be implemented`)}
-    createOperativeSystemMobileInstance() {throw new Error(`this methods can't be implemented`)}
-}
-
-class TabletAbstractFactory {
-    createCPUMobileInstance() {throw new Error(`this methods can't be implemented`)}
-    createMemoryMobileInstance() {throw new Error(`this methods can't be implemented`)}
-    createDisplayTabletInstance() {throw new Error(`this methods can't be implemented`)}
-    createOperativeSystemMobileInstance() {throw new Error(`this methods can't be implemented`)}
-}
-
-// FACTORIES - CLASSES THAT BUILD OBJECTS OF ANOTHER CLASSES AND IMPLEMENTERS THE ABSTRACT FACTORIES BEHAVIORS
-class LaptopFactory extends LaptopAbstractFactory {
-    createCPULaptopInstance(numberCores, brand, price) {
-        return new CPULaptop(numberCores, brand, price);
+    getAssembledLaptopBrand() {
+        return this.brand;
     }
 
-    createMemoryLaptopInstance(capacityInGB, price) {
-        return new MemoryLaptop(capacityInGB, price);
+    getAssembledLaptopCPU() {
+        return this.cpu;
     }
 
-    createDisplayLaptopInstance(numberInches, price) {
-        return new DisplayLaptop(numberInches, price);
+    getAssembledLaptopMemory() {
+        return this.memory;
     }
 
-    createOperativeSystemLaptopInstance(operativeSystem) {
-        return new OperativeSystemLaptop(operativeSystem);
+    getAssembledLaptopDisplay() {
+        return this.display;
+    }
+
+    getAssembledLaptopOperativeSystem() {
+        return this.operativeSystem;
+    }
+
+    getAssembledLaptopBasePrice() {
+        return this.basePrice;
+    }
+
+    getAssembledLaptopSalePrice(priceCalculateServiceFactory) {
+        let prices = [
+            this.cpu.price, 
+            this.memory.price, 
+            this.display.price, 
+            this.operativeSystem.price, 
+            this.basePrice
+        ];
+
+        const priceCalculateService = priceCalculateServiceFactory.createPriceCalculateServiceInstance();
+        return priceCalculateService.calculateLaptopPrice(prices);
     }
 }
 
-class PhoneFactory extends PhoneAbstractFactory {
-    createCPUMobileInstance(numberCores, brand, price) {
-        return new CPUMobile(numberCores, brand, price);
+// ENTITIES ABSTRACT FACTORY
+
+// ENTITIES FACTORIES
+
+//SERVICES INTERFACES
+
+//SERVICES
+class PriceCalculateService {
+
+    calculateLaptopPrice(prices) {
+        let totalPrice = 0;
+
+        for (let price of prices) {
+            totalPrice += price;
+        }
+
+        totalPrice = totalPrice + ((ConstProfitPercentage.laptopProfitPercentage / 100) * totalPrice);
+
+        return totalPrice;
     }
 
-    createMemoryMobileInstance(capacityInGB, price) {
-        return new MemoryMobile(capacityInGB, price);
-    }
+    calculatePhonePrice(prices) { }
 
-    createDisplayPhoneInstance(numberInches,price) {
-        return new DisplayPhone(numberInches,price);
-    }
-
-    createOperativeSystemMobileInstance(operativeSystem) {
-        return new OperativeSystemMobile(operativeSystem);
-    }
+    calculateTabletPrice(prices) { }
 }
 
-class TabletFactory extends TabletAbstractFactory {
-
-    createCPUMobileInstance(numberCores, brand, price) {
-        return new CPUMobile(numberCores, brand, price);
-    }
-
-    createMemoryMobileInstance(capacityInGB, price) {
-        return new MemoryMobile(capacityInGB, price);
-    }
-
-    createDisplayTabletInstance(numberInches,price) {
-        return new DisplayTablet(numberInches,price);
-    }
-
-    createOperativeSystemMobileInstance(operativeSystem) {
-        return new OperativeSystemMobile(operativeSystem);
+// SERVICES FACTORY
+class PriceCalculateServiceFactory {
+    createPriceCalculateServiceInstance() {
+        return new PriceCalculateService();
     }
 }
 
