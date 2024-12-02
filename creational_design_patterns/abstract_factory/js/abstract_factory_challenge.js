@@ -752,8 +752,8 @@ class PriceCalculateService {
     calculateGPSPrices(gpsList) {
         let gpsTotalPrice = 0;
 
-        for(let gpsPrice of gpsList) {
-            gpsTotalPrice += gpsPrice;
+        for(let gps of gpsList) {
+            gpsTotalPrice += gps.price;
         }
 
         return gpsTotalPrice;
@@ -770,7 +770,7 @@ class PriceCalculateServiceFactory {
 
 
 // APP TESTING
-function testApp(factory) {
+function testPhoneAndTabletFactory(factory) {
     const cpu = factory.createCPUInstance('core i5','intel',2,120000);
     const memory = factory.createSODimmMemoryInstance('GEFORCE','8',75000);
     const display = factory.createLCDDisplayInstance('lcdp','21',95000);
@@ -785,7 +785,20 @@ function testApp(factory) {
    
 }
 
-testApp(new TabletFactory());
+function testLaptopFactory(factory) {
+    const cpu = factory.createCPUInstance('core i5','intel',2,120000);
+    const memory = factory.createSODimmMemoryInstance('GEFORCE','8',75000);
+    const display = factory.createLCDDisplayInstance('lcdp','21',95000);
+    const operativeSystem = factory.createOperativeSystemInstance('Microsoft','windows 10',135000);
+
+    const device = factory.createDeviceInstance('ASUS',cpu,memory,display,operativeSystem,1200000);
+
+    console.log(device);
+   
+}
+
+//testPhoneAndTabletFactory(new TabletFactory());
+testLaptopFactory(new LaptopFactory());
 
 
 
