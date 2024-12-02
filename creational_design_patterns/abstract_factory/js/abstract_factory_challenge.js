@@ -18,7 +18,7 @@
 */
 
 
-//UTILS
+//UTILS CLASSES
 class ConstProfitPercentage {
     static laptopProfitPercentage = 0.6; // 60%
     static phoneProfitPercentage = 0.4; //40%
@@ -54,6 +54,13 @@ class OperativeSystemInterface {
     getOperativeSystemApplication() { throw new Error(`This method can't be implemented`) }
     getOperativeSystemBrand() { throw new Error(`This method can't be implemented`) }
 }
+
+class GPSInterface {
+    getGPSPrice() {throw new Error(`This method can't be implemented`)}
+    getGPSBrand() {throw new Error(`This method can't be implemented`)}
+    getGPSSuport() {throw new Error(`This method can't be implemented`)}
+    getGPSSetting() {throw new Error(`This method can't be implemented`)}
+ }
 
 class AssembledDeviceInterface {
     getAssembledDeviceBrand() { throw new Error(`This method can't be implemented`) }
@@ -130,6 +137,38 @@ class PhoneCPU extends CPUInterface {
     }
 }
 
+class TabletCPU extends CPUInterface {
+
+    constructor(serie, brand, coresNumber, price) {
+        super();
+        this.serie = serie;
+        this.brand = brand;
+        this.coresNumber = coresNumber;
+        this.application = 'Tablet';
+        this.price = price;
+    }
+
+    getCPUSerie() {
+        return this.serie;
+    }
+
+    getCPUBrand() {
+        return this.brand;
+    }
+
+    getCPUCoresNumber() {
+        return this.coresNumber;
+    }
+
+    getCPUApplication() {
+        return this.application;
+    }
+
+    getCPUPrice() {
+        return this.price;
+    }
+}
+
 class LaptopSODimmMemory extends MemoryInterface {
     constructor(brand, capacityInGB, price) {
         super();
@@ -162,6 +201,32 @@ class PhoneSODimmMemory extends MemoryInterface {
         this.brand = brand;
         this.capacityInGB = capacityInGB;
         this.application = 'Phone';
+        this.price = price;
+    }
+
+    getMemoryBrand() {
+        return this.brand;
+    }
+
+    getMemoryCapacityInGb() {
+        return this.capacityInGB;
+    }
+
+    getMemoryApplication() {
+        return this.application;
+    }
+
+    getMemoryPrice() {
+        return this.price;
+    }
+}
+
+class TabletSODimmMemory extends MemoryInterface {
+    constructor(brand, capacityInGB, price) {
+        super();
+        this.brand = brand;
+        this.capacityInGB = capacityInGB;
+        this.application = 'Tablet';
         this.price = price;
     }
 
@@ -234,6 +299,32 @@ class PhoneLCDDisplay extends DisplayInterface {
     }
 }
 
+class TabletLCDDisplay extends DisplayInterface {
+    constructor(brand, inches, price) {
+        super();
+        this.brand = brand;
+        this.inches = inches;
+        this.application = 'Tablet';
+        this.price = price;
+    }
+
+    getDisplayBrand() {
+        return this.brand;
+    }
+
+    getDisplayInches() {
+        return this.inches;
+    }
+
+    getDisplayApplication() {
+        return this.application;
+    }
+
+    getDisplayPrice() {
+        return this.price;
+    }
+}
+
 class LaptopOperativeSystem extends OperativeSystemInterface {
     constructor(brand, version, price) {
         super();
@@ -283,6 +374,58 @@ class PhoneOperativeSystem extends OperativeSystemInterface {
 
     getOperativeSystemLicensePrice() {
         return this.price;
+    }
+}
+
+class TabletOperativeSystem extends OperativeSystemInterface {
+    constructor(brand, version, price) {
+        super();
+        this.brand = brand;
+        this.version = version;
+        this.application = 'Tablet';
+        this.price = price;
+    }
+
+    getOperativeSystemBrand() {
+        return this.brand;
+    }
+
+    getOperativeSystemVersion() {
+        return this.version;
+    }
+
+    getOperativeSystemApplication() {
+        return this.application;
+    }
+
+    getOperativeSystemLicensePrice() {
+        return this.price;
+    }
+}
+
+class GPSLocation extends GPSInterface {
+    constructor(brand, hasSupport, canSettings, price) {
+        super();
+        this.brand = brand;
+        this.hasSupport = hasSupport;
+        this.canSettings = canSettings;
+        this.price = price;
+    }
+
+    getGPSBrand() {
+        return this.brand;
+    }
+
+    getGPSSuport() {
+        return this.hasSupport;
+    }
+
+    getGPSSetting() {
+        return this.canSettings;
+    }
+
+    getGPSPrice() {
+        return this.price
     }
 }
 
@@ -350,7 +493,8 @@ class Phone extends AssembledDeviceInterface {
         phoneMemory,
         phoneDisplay,
         phoneOperativeSystem,
-        basePrice
+        basePrice,
+        gpsList
     ) {
         super();
         this.brand = brand;
@@ -359,6 +503,7 @@ class Phone extends AssembledDeviceInterface {
         this.display = phoneDisplay;
         this.operativeSystem = phoneOperativeSystem;
         this.basePrice = basePrice;
+        this.gpsList = gpsList;
         this.salePrice = this.getAssembledDeviceSalePrice(new PriceCalculateServiceFactory());
     }
 
@@ -387,64 +532,181 @@ class Phone extends AssembledDeviceInterface {
     }
 
     getAssembledDeviceSalePrice(priceCalculateServiceFactory) {
+        const priceCalculateService = priceCalculateServiceFactory.createPriceCalculateServiceInstance();
+
+        let gpsPrices = priceCalculateService.calculateGPSPrices(this.gpsList);
+
+
         let prices = [
             this.cpu.price,
             this.memory.price,
             this.display.price,
             this.operativeSystem.price,
-            this.basePrice
+            this.basePrice,
+            gpsPrices
         ];
 
-        const priceCalculateService = priceCalculateServiceFactory.createPriceCalculateServiceInstance();
+        
         return priceCalculateService.calculatePhonePrice(prices);
     }
 }
 
-// ENTITIES ABSTRACT FACTORY
-class LaptopAbstractFactory {
-    createLaptopCPUInstance() { throw new Error(`This method can't be implemented`) }
-    createLaptopSODimmMemoryInstance() { throw new Error(`This method can't be implemented`) }
-    createLaptopLCDDisplayInstance() { throw new Error(`This method can't be implemented`) }
-    createLaptopOperativeSystemInstance() { throw new Error(`This method can't be implemented`) }
-    createLaptopInstance() { throw new Error(`This method can't be implemented`) }
+class Tablet extends AssembledDeviceInterface {
+    constructor(
+        brand,
+        tabletCPU,
+        tabletMemory,
+        tabletDisplay,
+        tabletOperativeSystem,
+        basePrice,
+        gpsList
+    ) {
+        super();
+        this.brand = brand;
+        this.cpu = tabletCPU;
+        this.memory = tabletMemory;
+        this.display = tabletDisplay;
+        this.operativeSystem = tabletOperativeSystem;
+        this.basePrice = basePrice;
+        this.gpsList = gpsList;
+        this.salePrice = this.getAssembledDeviceSalePrice(new PriceCalculateServiceFactory());
+    }
+
+    getAssembledDeviceBrand() {
+        return this.brand;
+    }
+
+    getAssembledDeviceCPU() {
+        return this.cpu;
+    }
+
+    getAssembledDeviceMemory() {
+        return this.memory;
+    }
+
+    getAssembledDeviceDisplay() {
+        return this.display;
+    }
+
+    getAssembledDeviceOperativeSystem() {
+        return this.operativeSystem;
+    }
+
+    getAssembledDeviceBasePrice() {
+        return this.basePrice;
+    }
+
+    getAssembledDeviceSalePrice(priceCalculateServiceFactory) {
+        const priceCalculateService = priceCalculateServiceFactory.createPriceCalculateServiceInstance();
+        let gpsPrices = priceCalculateService.calculateGPSPrices(this.gpsList);
+
+
+        let prices = [
+            this.cpu.price,
+            this.memory.price,
+            this.display.price,
+            this.operativeSystem.price,
+            this.basePrice,
+            gpsPrices
+        ];
+
+        
+        return priceCalculateService.calculateTabletPrice(prices);
+    }
 }
 
-class PhoneAbstractFactory {
-    createPhoneCPUInstance() { throw new Error(`This method can't be implemented`) }
-    createPhoneSODimmMemoryInstance() { throw new Error(`This method can't be implemented`) }
-    createPhoneLCDDisplayInstance() { throw new Error(`This method can't be implemented`) }
-    createPhoneOperativeSystemInstance() { throw new Error(`This method can't be implemented`) }
-    createPhoneInstance() { throw new Error(`This method can't be implemented`) }
+// ENTITIES ABSTRACT FACTORY
+class DeviceAbstractFactory {
+    createCPUInstance() { throw new Error(`This method can't be implemented`) }
+    createSODimmMemoryInstance() { throw new Error(`This method can't be implemented`) }
+    createLCDDisplayInstance() { throw new Error(`This method can't be implemented`) }
+    createOperativeSystemInstance() { throw new Error(`This method can't be implemented`) }
+    createDeviceInstance() { throw new Error(`This method can't be implemented`) }
+}
+
+class MobileAbstractFactory {
+    createCPUInstance() { throw new Error(`This method can't be implemented`) }
+    createSODimmMemoryInstance() { throw new Error(`This method can't be implemented`) }
+    createLCDDisplayInstance() { throw new Error(`This method can't be implemented`) }
+    createOperativeSystemInstance() { throw new Error(`This method can't be implemented`) }
+    createDeviceInstance() { throw new Error(`This method can't be implemented`) }
+    createGPSLocationInstance() {throw new Error(`This method can't be implemented`)}
 }
 
 // ENTITIES FACTORIES
-class LaptopFactory extends LaptopAbstractFactory {
-    createLaptopCPUInstance(serie, brand, coresNumber, price) {
+class LaptopFactory extends DeviceAbstractFactory {
+    createCPUInstance(serie, brand, coresNumber, price) {
         return new LaptopCPU(serie, brand, coresNumber, price);
     }
 
-    createLaptopSODimmMemoryInstance(brand, capacityInGB, price) {
+    createSODimmMemoryInstance(brand, capacityInGB, price) {
         return new LaptopSODimmMemory(brand, capacityInGB, price);
     }
 
-    createLaptopLCDDisplayInstance(brand, inches, price) {
+    createLCDDisplayInstance(brand, inches, price) {
         return new LaptopLCDDisplay(brand, inches, price);
     }
 
-    createLaptopOperativeSystemInstance(brand, version, price) {
+    createOperativeSystemInstance(brand, version, price) {
         return new LaptopOperativeSystem(brand, version, price);
     }
 
-    createLaptopInstance(brand, laptopCPU, laptopMemory, laptopDisplay, laptopOperativeSystem, basePrice) {
+    createDeviceInstance(brand, laptopCPU, laptopMemory, laptopDisplay, laptopOperativeSystem, basePrice) {
         return new Laptop(brand, laptopCPU, laptopMemory, laptopDisplay, laptopOperativeSystem, basePrice);
     }
 }
 
-/*class PhoneFactory extends PhoneAbstractFactory {
-    createGeneralCPUInstance(serie, brand, coresNumber, application, price) {
-        return new GeneralCPU(serie, brand, coresNumber, application, price);
+class PhoneFactory extends MobileAbstractFactory {
+    createCPUInstance(serie, brand, coresNumber, price) {
+        return new PhoneCPU(serie, brand, coresNumber, price);
     }
-}*/
+
+    createSODimmMemoryInstance(brand, capacityInGB, price) {
+        return new PhoneSODimmMemory(brand, capacityInGB, price);
+    }
+
+    createLCDDisplayInstance(brand, inches, price) {
+        return new PhoneLCDDisplay(brand, inches, price);
+    }
+
+    createOperativeSystemInstance(brand, version, price) {
+        return new PhoneOperativeSystem(brand, version, price);
+    }
+
+    createGPSLocationInstance(brand, hasSupport, canSettings, price) {
+        return new GPSLocation(brand, hasSupport, canSettings, price);
+    }
+
+    createDeviceInstance(brand, phoneCPU, phoneMemory, phoneDisplay, phoneOperativeSystem, basePrice, gpsList) {
+        return new Phone(brand, phoneCPU, phoneMemory, phoneDisplay, phoneOperativeSystem, basePrice, gpsList);
+    }
+}
+
+class TabletFactory extends MobileAbstractFactory {
+    createCPUInstance(serie, brand, coresNumber, price) {
+        return new TabletCPU(serie, brand, coresNumber, price);
+    }
+
+    createSODimmMemoryInstance(brand, capacityInGB, price) {
+        return new TabletSODimmMemory(brand, capacityInGB, price);
+    }
+
+    createLCDDisplayInstance(brand, inches, price) {
+        return new TabletLCDDisplay(brand, inches, price);
+    }
+
+    createOperativeSystemInstance(brand, version, price) {
+        return new TabletOperativeSystem(brand, version, price);
+    }
+
+    createGPSLocationInstance(brand, hasSupport, canSettings, price) {
+        return new GPSLocation(brand, hasSupport, canSettings, price);
+    }
+
+    createDeviceInstance(brand, tabletCPU, tabletMemory, tabletDisplay, tabletOperativeSystem, basePrice, gpsList) {
+        return new Tablet(brand, tabletCPU, tabletMemory, tabletDisplay, tabletOperativeSystem, basePrice, gpsList);
+    }
+}
 
 //SERVICES INTERFACES
 
@@ -463,9 +725,39 @@ class PriceCalculateService {
         return totalPrice;
     }
 
-    calculatePhonePrice(prices) { }
+    calculatePhonePrice(prices) {
+        let totalPrice = 0;
 
-    calculateTabletPrice(prices) { }
+        for (let price of prices) {
+            totalPrice += price;
+        }
+
+        totalPrice = totalPrice + ((ConstProfitPercentage.phoneProfitPercentage / 100) * totalPrice);
+
+        return totalPrice;
+    }
+
+    calculateTabletPrice(prices) {
+        let totalPrice = 0;
+
+        for (let price of prices) {
+            totalPrice += price;
+        }
+
+        totalPrice = totalPrice + ((ConstProfitPercentage.tabletProfitPercentage / 100) * totalPrice);
+
+        return totalPrice;
+    }
+
+    calculateGPSPrices(gpsList) {
+        let gpsTotalPrice = 0;
+
+        for(let gps of gpsList) {
+            gpsTotalPrice += gps.price;
+        }
+
+        return gpsTotalPrice;
+    }
 }
 
 // SERVICES FACTORY
@@ -478,20 +770,35 @@ class PriceCalculateServiceFactory {
 
 
 // APP TESTING
-function testApp() {
-    const laptopFactory = new LaptopFactory();
-    const cpu = laptopFactory.createLaptopCPUInstance('core i5','intel',2,120000);
-    const memory = laptopFactory.createLaptopSODimmMemoryInstance('GEFORCE','8',75000);
-    const display = laptopFactory.createLaptopLCDDisplayInstance('lcdp','21',95000);
-    const operativeSystem = laptopFactory.createLaptopOperativeSystemInstance('Microsoft','windows 10',135000);
+function testPhoneAndTabletFactory(factory) {
+    const cpu = factory.createCPUInstance('core i5','intel',2,120000);
+    const memory = factory.createSODimmMemoryInstance('GEFORCE','8',75000);
+    const display = factory.createLCDDisplayInstance('lcdp','21',95000);
+    const operativeSystem = factory.createOperativeSystemInstance('Microsoft','windows 10',135000);
+    const gpsLocation = factory.createGPSLocationInstance('Queclink', true, false, 135000);
 
-    const laptop = laptopFactory.createLaptopInstance('ASUS',cpu,memory,display,operativeSystem,1200000);
+    let gpsList = [gpsLocation];
 
-    console.log(laptop);
+    const device = factory.createDeviceInstance('ASUS',cpu,memory,display,operativeSystem,1200000,gpsList);
+
+    console.log(device);
    
 }
 
-testApp();
+function testLaptopFactory(factory) {
+    const cpu = factory.createCPUInstance('core i5','intel',2,120000);
+    const memory = factory.createSODimmMemoryInstance('GEFORCE','8',75000);
+    const display = factory.createLCDDisplayInstance('lcdp','21',95000);
+    const operativeSystem = factory.createOperativeSystemInstance('Microsoft','windows 10',135000);
+
+    const device = factory.createDeviceInstance('ASUS',cpu,memory,display,operativeSystem,1200000);
+
+    console.log(device);
+   
+}
+
+//testPhoneAndTabletFactory(new TabletFactory());
+testLaptopFactory(new LaptopFactory());
 
 
 
