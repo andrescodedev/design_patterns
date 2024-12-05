@@ -186,6 +186,33 @@ class TabletScreen extends Screen {
     }
 }
 
+class HardDisk {
+
+    constructor(brand, storeCapacity, type, price) {
+        this.brand = brand;
+        this.storeCapacity = storeCapacity;
+        this.type = type;
+        this.application = 'Laptop';
+        this.price = price;
+    }
+
+    getHardDiskBrand() {
+        return this.brand;
+    }
+
+    getHardDiskStoreCapacity() {
+        return this.storeCapacity;
+    }
+
+    getHardDiskType() {
+        return this.type;
+    }
+
+    getHardDiskPrice() {
+        return this.price;
+    }
+}
+
 // FACTORY DESIGN PATTERN
 // FACTORIES
 class CPUFactory {
@@ -230,89 +257,20 @@ class ScreenFactory {
     }
 }
 
+class HardDiskFactory {
+
+    fabricateHardDisk(brand, storeCapacity, type, price) {
+        return new HardDisk(brand, storeCapacity, type, price);
+    }
+}
+
 // BUILDER DESIGN PATTERN
 // PRODUCT CLASSES
-class Laptop {
-    
-    set cpu(cpu) {
-        this.cpu = cpu;
-    }
+class Laptop {}
 
-    get cpu() {
-        return this.cpu;
-    }
+class Phone {}
 
-    set memory(memory) {
-        this.memory = memory;
-    }
-
-    get memory() {
-        return this.memory;
-    }
-
-    set screen(screen) {
-        this.screen = screen;
-    }
-
-    get screen() {
-        return this.screen;
-    }
-
-}
-
-class Phone {
-
-    set cpu(cpu) {
-        this.cpu = cpu;
-    }
-
-    get cpu() {
-        return this.cpu;
-    }
-
-    set memory(memory) {
-        this.memory = memory;
-    }
-
-    get memory() {
-        return this.memory;
-    }
-
-    set screen(screen) {
-        this.screen = screen;
-    }
-
-    get screen() {
-        return this.screen;
-    }
-}
-
-class Tablet {
-
-    set cpu(cpu) {
-        this.cpu = cpu;
-    }
-
-    get cpu() {
-        return this.cpu;
-    }
-
-    set memory(memory) {
-        this.memory = memory;
-    }
-
-    get memory() {
-        return this.memory;
-    }
-
-    set screen(screen) {
-        this.screen = screen;
-    }
-
-    get screen() {
-        return this.screen;
-    }
-}
+class Tablet {}
 
 
 // BUILDERS INTERFACES
@@ -326,10 +284,12 @@ class LaptopBuilderInterface {
 
     setScreen(screen) {throw new Error(`This method can't be implemented`)}
 
+    setHardDisk(hardDisk) {throw new Error(`This method can't be implemented`)}
+
     getLaptop() {throw new Error(`This method can't be implemented`)}
 }
 
-class MobileBuilderInterface {
+class MobileDeviceBuilderInterface {
 
     reset() {throw new Error(`This method can't be implemented`)}
 
@@ -366,6 +326,10 @@ class LaptopBuilder extends LaptopBuilderInterface {
         this.laptop.screen = screen;
     }
 
+    setHardDisk(hardDisk) {
+        this.laptop.hardDisk = hardDisk;
+    }
+
     getLaptop() {
         const laptop = this.laptop;
         this.reset();
@@ -373,7 +337,7 @@ class LaptopBuilder extends LaptopBuilderInterface {
     }
 }
 
-class PhoneBuilder extends MobileBuilderInterface {
+class PhoneBuilder extends MobileDeviceBuilderInterface {
 
     constructor() {
         super();
@@ -403,7 +367,7 @@ class PhoneBuilder extends MobileBuilderInterface {
     }
 }
 
-class TabletBuilder extends MobileBuilderInterface {
+class TabletBuilder extends MobileDeviceBuilderInterface {
 
     constructor() {
         super();
@@ -444,9 +408,14 @@ class DeviceDirector {
         this.builder.setCPU(components.cpu);
         this.builder.setMemory(components.memory);
         this.builder.setScreen(components.screen);
+        this.builder.setHardDisk(components.hardDisk);
     }
 
-    buildPhone() {}
+    buildPhone(components) {
+        this.builder.setCPU(components.cpu);
+        this.builder.setMemory(components.memory);
+        this.builder.setScreen(components.screen);
+    }
 
     buildTablet() {}
 }
@@ -455,10 +424,31 @@ function getLaptopComponents() {
     const cpuFactory = new CPUFactory();
     const memoryFactory = new MemoryFactory();
     const screenFactory = new ScreenFactory();
+    const hasrDiskFactory = new HardDiskFactory();
 
     const cpu = cpuFactory.fabricateLaptopCPU('core i5','intel',4,152000);
     const memory = memoryFactory.fabricateRamMemory('SODimm','8',85000);
     const screen = screenFactory.fabricateLaptopScreen('lenovo','21','LCD',95000);
+    const hardDisk = hasrDiskFactory.fabricateHardDisk('Toshiba','1TB','HDD',250000);
+
+
+    return {
+        cpu: cpu,
+        memory:memory,
+        screen:screen,
+        hardDisk:hardDisk
+    }
+    
+}
+
+function getMobileDevicesComponents() {
+    const cpuFactory = new CPUFactory();
+    const memoryFactory = new MemoryFactory();
+    const screenFactory = new ScreenFactory();
+
+    const cpu = cpuFactory.fabricateLaptopCPU('core i3','intel',2,152000);
+    const memory = memoryFactory.fabricateRamMemory('SODimm','16',95000);
+    const screen = screenFactory.fabricateLaptopScreen('LG','55','LED',400000);
 
 
     return {
@@ -481,7 +471,20 @@ function createLaptop() {
 
 }
 
+function createPhone() {
+    const phonepBuilder = new PhoneBuilder();
+    const deviceDirector = new DeviceDirector();
+
+    deviceDirector.setBuilder(phonepBuilder);
+    deviceDirector.buildPhone(getMobileDevicesComponents());
+
+    const phone = phonepBuilder.getMobile();
+    console.log(phone);
+
+}
+
 createLaptop();
+//createPhone();
 
 
 
