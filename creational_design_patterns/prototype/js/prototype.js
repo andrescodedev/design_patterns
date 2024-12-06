@@ -1,0 +1,5 @@
+/* 
+    PROTOTYPE DESIGN PATTERN
+
+    
+*/
