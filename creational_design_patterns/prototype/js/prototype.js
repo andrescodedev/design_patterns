@@ -13,12 +13,20 @@ class PrototypeInterface {
 
 class Airplane extends PrototypeInterface {
 
-    createClone() {
-        console.log(`Creating clone`);
-    }
+    flightNumber;
+    agencyName;
+    passengersNumber;
 
-    createClone(flightNumber) {
-        console.log(`The flight number is ${flightNumber}`);
+    /*createClone() {
+        return new Airplane(this);
+    }*/
+
+    createClonA() {}
+    createClonB() {}
+
+    createCloneC(passengersNumber) {
+        this.passengersNumber = passengersNumber;
+        return new Airplane(this);
     }
     
 }
@@ -26,7 +34,17 @@ class Airplane extends PrototypeInterface {
 function testApp() {
     const airplane = new Airplane();
 
-    airplane.createClone();
+    //airplane.flightNumber = '753';
+    //airplane.agencyName = 'Avianca';
+
+    //const airplaneClon = airplane.createClone();
+    const clonC = airplane.createCloneC(150);
+
+    //console.log(airplane);
+    //console.log(airplaneClon);
+    console.log(clonC);
+
+    
 }
 
 testApp();
